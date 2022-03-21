@@ -1,4 +1,4 @@
-all:prog1 prog2 prog3
+all:clean prog1 prog2 prog3 
 prog1:
 	gcc -o prog1 lexcmp.c
 prog2:
