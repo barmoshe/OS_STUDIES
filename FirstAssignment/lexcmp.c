@@ -23,4 +23,3 @@ int main(int argc, char *argv[])
 	int answer = mylencmp(argv[1], argv[2]);
 	return answer;
 }
-//test
