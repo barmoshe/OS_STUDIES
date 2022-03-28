@@ -13,7 +13,7 @@ int countDigitsInString(const char *str)
     }
     return counter;
 }
-int mylencmp(const char *str1, const char *str2)
+int digcmp(const char *str1, const char *str2)
 {
     int digCount1 = countDigitsInString(str1);
     int digCount2 = countDigitsInString(str2);
@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
         printf("need 2 arguments");
         return -1;
     }
-    int answer = mylencmp(argv[1], argv[2]);
+    int answer = digcmp(argv[1], argv[2]);
+    printf("Answer:\t%d\n",answer);
     return answer;
 }

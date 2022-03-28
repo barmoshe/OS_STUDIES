@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 //
-int mylencmp(const char *str1, const char *str2)
+int lencmp(const char *str1, const char *str2)
 {
     int len1 = strlen(str1);
     int len2 = strlen(str2);
@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
 		printf("need 2 arguments");
         return -1;
     }
-    int answer = mylencmp(argv[1], argv[2]);
+    int answer = lencmp(argv[1], argv[2]);
+    printf("Answer:\t%d\n",answer);
     return answer;
 }
