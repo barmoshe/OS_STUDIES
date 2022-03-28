@@ -1,18 +1,17 @@
 #include <string.h>
 #include <stdio.h>
-
-int countDigitsInString(const char *str)
+#include <ctype.h>
+int countDigitsInString(const char *s)
 {
-    int counter = 0;
-    char c = '0';
-    for (int i = 0; i <= 9; i++)
-    {
-        if (strchr(str, c) != NULL)
-            counter++;
-        c++;
-    }
-    return counter;
+    int length = strlen(s);
+    int count = 0;
+    for (int i = 0; i < length; i++)
+        if (s[i] >= '0' && s[i] <= '9')
+            count++;
+
+    return count;
 }
+
 int digcmp(const char *str1, const char *str2)
 {
     int digCount1 = countDigitsInString(str1);
@@ -38,6 +37,6 @@ int main(int argc, char *argv[])
         return -1;
     }
     int answer = digcmp(argv[1], argv[2]);
-    printf("Answer:\t%d\n",answer);
+    printf("Answer:\t%d\n", answer);
     return answer;
 }
