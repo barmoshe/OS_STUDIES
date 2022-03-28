@@ -7,6 +7,7 @@ prog3:
 	gcc -o prog3 digcmp.c
 prog4:
 	gcc -o prog4 loopcmp.c
+	
 clean: 
 	rm -f lexcmp.o prog1
 	rm -f lencmp.o prog2
