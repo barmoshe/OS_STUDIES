@@ -1,15 +1,15 @@
-all:clean prog1 prog2 prog3 prog4
+all:clean lexcmp lencmp digcmp loopcmp
 prog1:
-	gcc -o prog1 lexcmp.c
+	gcc -o lexcmp lexcmp.c -Wall
 prog2:
-	gcc -o prog2 lencmp.c
+	gcc -o lencmp lencmp.c -Wall
 prog3:
-	gcc -o prog3 digcmp.c
+	gcc -o digcmp digcmp.c -Wall
 prog4:
-	gcc -o prog4 loopcmp.c
+	gcc -o loopcmp loopcmp.c -Wall
 	
 clean: 
-	rm -f lexcmp.o prog1
-	rm -f lencmp.o prog2
-	rm -f digcmp.o prog3
-	rm -f loopcmp.o prog4	
+	rm -f lexcmp.o lexcmp
+	rm -f lencmp.o lencmp
+	rm -f digcmp.o digcmp
+	rm -f loopcmp.o loopcmp	
