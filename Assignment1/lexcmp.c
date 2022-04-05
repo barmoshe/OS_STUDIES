@@ -20,6 +20,5 @@ int main(int argc, char *argv[])
 		printf("need 2 arguments");
 		return -1;
 	}
-	int answer = lexcmp(argv[1], argv[2]);
-	return answer;
+	return lexcmp(argv[1], argv[2]);
 }

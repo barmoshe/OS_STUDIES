@@ -19,9 +19,9 @@ int digcmp(const char *str1, const char *str2)
     if (digCount1 != digCount2)
     {
         if (digCount1 > digCount2)
-            return 2;
-        else
             return 1;
+        else
+            return 2;
     }
     else
         return 0;
@@ -36,6 +36,5 @@ int main(int argc, char *argv[])
         printf("need 2 arguments");
         return -1;
     }
-    int answer = digcmp(argv[1], argv[2]);
-    return answer;
+    return digcmp(argv[1], argv[2]);
 }

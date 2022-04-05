@@ -1,13 +1,15 @@
-CC=gcc
-OBJS1=loopcmp.o 
-EXEC1=loopcmp
-DEBUG = -g
-CFLAGS = -std=c99  -Wall -Werror $(DEBUG)
-
-$(EXEC1) : $(OBJS1)
-	$(CC) $(OBJS1) -o $@
+all:clean lexcmp lencmp digcmp loopcmp
+lexcmp:
+	gcc -o lexcmp lexcmp.c -Wall
+lencmp:
+	gcc -o lencmp lencmp.c -Wall
+digcmp:
+	gcc -o digcmp digcmp.c -Wall
+loopcmp:
+	gcc -o loopcmp loopcmp.c -Wall
 	
-loopcmp.o: loopcmp.c
 clean: 
-	rm -f $(EXEC) $(OBJS)
-	
+	rm -f lexcmp.o lexcmp
+	rm -f lencmp.o lencmp
+	rm -f digcmp.o digcmp
+	rm -f loopcmp.o loopcmp	

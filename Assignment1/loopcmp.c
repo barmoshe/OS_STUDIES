@@ -1,95 +1,69 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 #define LINELEN (80)
 
-int lencmp(const char *str1, const char *str2);
-int lexcmp(const char *str1, const char *str2);
-int digcmp(const char *str1, const char *str2);
 char *mygets(char *buf, int len);
-
+char *progName(char *prog);
 int main(int argc, char *argv[])
 {
-    int (*cmpfunc)(const char *, const char *) = NULL;
+    char *args[4];
+    args[3] = NULL;
     char str1[LINELEN + 1];
     char str2[LINELEN + 1];
-
+    int childReturns = 1;
     if (argc != 2)
-        return -1;
+        return -2;
 
-    if (!strcmp(argv[1], "lexcmp"))
-        cmpfunc = lexcmp;
-    else if (!strcmp(argv[1], "lencmp"))
-        cmpfunc = lencmp;
-    else if (!strcmp(argv[1], "digcmp"))
-        cmpfunc = digcmp;
-    else
-        return -1;
-
+    char *prog = progName(argv[1]);
+    if (prog == NULL)
+        return -2;
+    args[0] = prog;
     while (1)
     {
+        printf("Enter string:");
         if (mygets(str1, LINELEN) == NULL)
             break;
+        printf("Enter  string:");
         if (mygets(str2, LINELEN) == NULL)
             break;
-        int answer = cmpfunc(str1, str2);
-        printf("Answer:\t%d\n", answer);
-        fflush(stdout);
-    }
-    return 0;
-}
-
-int lencmp(const char *str1, const char *str2)
-{
-    int val;
-    val = strlen(str1) - strlen(str2);
-    if (val < 0)
-        return 1;
-    if (val > 0)
-        return 2;
-    return 0;
-}
-
-int lexcmp(const char *str1, const char *str2)
-{
-    int val;
-
-    val = strcmp(str1, str2);
-    if (val < 0)
-        return 1;
-    if (val > 0)
-        return 2;
-    return 0;
-}
-int countDigitsInString(const char *s)
-{
-    int length = strlen(s);
-    int count = 0;
-    for (int i = 0; i < length; i++)
-        if (s[i] >= '0' && s[i] <= '9')
-            count++;
-
-    return count;
-}
-int digcmp(const char *str1, const char *str2)
-{
-    int digCount1 = countDigitsInString(str1);
-    int digCount2 = countDigitsInString(str2);
-    if (digCount1 != digCount2)
-    {
-        if (digCount1 > digCount2)
-            return 2;
+        args[1] = str1;
+        args[2] = str2;
+        int processId = fork();
+        if (processId == 0)
+        {
+            if (execvp(prog, args) > 0)
+                return -2;
+        }
+        else if (processId > 0)
+        {
+            wait(&childReturns); // Wait for the child
+            printf("Child  code is %d\n", WEXITSTATUS(childReturns));
+        }
         else
-            return 1;
+            return -2;
     }
-    else
-        return 0;
+    free(prog);
+    return 0;
 }
+char *progName(char *prog)
+{
+    char *filePath = (char *)malloc(strlen(prog) + 3);
+    if (!filePath)
+        return NULL;
+    strcpy(filePath, "./");
+    strcat(filePath, prog);
+    return filePath;
+}
+
 char *mygets(char *buf, int len)
 {
     char *retval;
-    printf("enter string : \n");
+
     retval = fgets(buf, len, stdin);
     buf[len] = '\0';
     if (buf[strlen(buf) - 1] == 10) /* trim \r */
