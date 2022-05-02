@@ -31,9 +31,9 @@ int main(int argc, char *argv[])
 	if (pipe(lexPipeTransmitFD) != 0)
 		return -2;
 
-	int lexID = fork();
+	int lexProccesID = fork();
 
-	if (lexID == 0)
+	if (lexProccesID == 0)
 	{
 		// SET TRANSMIT PIPE - WRITES TO LOOPCMP LEXCMP
 		if (dup2(lexPipeTransmitFD[0], STDIN_FILENO) == -1)
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 		if (close(lexPipeReceiveFD[1]) != 0)
 			return -2;
 
-		char *myargs[3] = {"./loopcmp", "./lexcmp", NULL};
+		char *myargs[3] = {"./loopcmp", "lexcmp", NULL};
 		if (execvp(myargs[0], myargs) == -1)
 			return -2;
 	}
@@ -71,9 +71,9 @@ int main(int argc, char *argv[])
 	if (pipe(lenPipeTransmitFD) != 0)
 		return -2;
 
-	int lenID = fork();
+	int lenProccesID = fork();
 
-	if (lenID == 0)
+	if (lenProccesID == 0)
 	{
 		if (close(lexPipeTransmitFD[1]) != 0)
 			return -2;
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 		if (close(lenPipeReceiveFD[1]) != 0)
 			return -2;
 
-		char *myargs[3] = {"./loopcmp", "./lencmp", NULL};
+		char *myargs[3] = {"./loopcmp", "lencmp", NULL};
 
 		if (execvp(myargs[0], myargs) == -1)
 			return -2;
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 	// START LOOP
 	while (1)
 	{
-		//GET STRINGS
+		// GET STRINGS
 		printf("Please enter first string:\n");
 		if (mygets(str1, LINELEN) == NULL)
 			break;
@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
 		if (mygets(str2, LINELEN) == NULL)
 			break;
 
-		//GET COMPARE TYPE
+		// GET COMPARE TYPE
 		do
 		{
 			printf("Please choose:\n");
@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
 		} while ((index < 0) || (index >= veclen));
 
 		char returnFromLoopcmp;
-		//CHANNEL THE PIPE TO THE SELECTED COPMARATOR
+		// CHANNEL THE PIPE TO THE SELECTED COPMARATOR
 		switch (index)
 		{
 		case LEXCMP:
@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
 				return -2;
 			break;
 		}
-		
+
 		printf("%s(%s, %s) == %c\n", cmpstr[index], str1, str2, returnFromLoopcmp);
 		fflush(stdout);
 	}
@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
 		return -2;
 
 	int childReturns;
-	if (waitpid(lexID, &childReturns, 0) == -1)
+	if (waitpid(lexProccesID, &childReturns, 0) == -1)
 		return -2;
 
 	if (!WIFEXITED(childReturns))
@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
 	if (close(lenPipeReceiveFD[0]) != 0)
 		return -2;
 
-	if (waitpid(lenID, &childReturns, 0) == -1)
+	if (waitpid(lenProccesID, &childReturns, 0) == -1)
 		return -2;
 
 	if (!WIFEXITED(childReturns))
