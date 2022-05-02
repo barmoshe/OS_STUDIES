@@ -1,11 +1,9 @@
-all:clean  loopcmp  nicecmp
+all:clean   nicecmp
 
-loopcmp:
-	gcc -o loopcmp loopcmp.c -Wall
+l
 nicecmp:
 	gcc -o nicecmp nicecmp.c -Wall
 	
 clean: 
-	rm -f loopcmp.o loopcmp	
 	rm -f nicecmp.o nicecmp
 
