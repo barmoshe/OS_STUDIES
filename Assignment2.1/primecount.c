@@ -1,22 +1,27 @@
+
+#include <sys/wait.h>
+#include <sys/mman.h>
+#include <fcntl.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <unistd.h>
 
-void parseargs(char *argv[], int argc, int *lval, int *uval);
+void parseargs(char *argv[], int argc, int *lval, int *uval, int *nval, int *pval);
 int isprime(int n);
 
 int main(int argc, char **argv)
 {
     int lval = 1;
     int uval = 100;
+    int nval = 10;
+    int pval = 4;
     char *flagarr = NULL;
-    int num;
-    int count = 0;
+    int countPrime = 0;
 
     // Parse arguments
-    parseargs(argv, argc, &lval, &uval);
+    parseargs(argv, argc, &lval, &uval, &nval, &pval);
     if (uval < lval)
     {
         fprintf(stderr, "Upper bound should not be smaller then lower bound\n");
@@ -27,44 +32,72 @@ int main(int argc, char **argv)
         lval = 2;
         uval = (uval > 1) ? uval : 1;
     }
-
-    // Allocate flags
-    flagarr = (char *)malloc(sizeof(char) * (uval - lval + 1));
-    if (flagarr == NULL)
-        exit(1);
-
-    // Set flagarr
-    for (num = lval; num <= uval; num++)
+    if (pval <= 0)
     {
-        if (isprime(num))
+        fprintf(stderr, "You need to use at least one proccessor\n");
+        exit(1);
+    }
+    // Allocate flags
+    flagarr = mmap(NULL, sizeof(char) * (uval - lval + 1), PROT_READ | PROT_WRITE,
+                   MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    if (flagarr == MAP_FAILED)
+        exit(1);
+    for (int process = 0; process < pval; process++)
+    {
+        pid_t pId = fork();
+        if (pId == 0)
         {
-            flagarr[num - lval] = 1;
-            count++;
-        }
-        else
-        {
-            flagarr[num - lval] = 0;
+            for (int i = lval + process; i <= uval; (i = i + pval))
+            {
+                if (isprime(i))
+                {
+                    flagarr[i - lval] = 1;
+                }
+                else
+                {
+                    flagarr[i - lval] = 0;
+                }
+            }
+            exit(EXIT_SUCCESS);
         }
     }
 
-    // Print results
-    printf("Found %d primes%c\n", count, count ? ':' : '.');
-    for (num = lval; num <= uval; num++)
-        if (flagarr[num - lval])
+    // Set flagarr
+    for (int i = lval; i <= uval; i++)
+    {
+        if (flagarr[i - lval] == 1)
         {
-            count--;
-            printf("%d%c", num, count ? ',' : '\n');
+            countPrime++;
         }
+    }
+    // Print results
+    printf("Found %d primes%c\n", countPrime, countPrime ? ':' : '.');
+    printf("printing %d : \n", nval);
+    int temp = nval;
+    int index = 1;
+    for (int i = lval; i <= uval; i++)
+        if (flagarr[i - lval])
+        {
+            temp--;
+            if (temp >= 0)
+            {
+                printf("%d%c) %d\n", index, index >= 10 ? '\0' : ' ', i);
+                index++;
+            }
+        }
+
+    if (munmap(flagarr, sizeof(char) * (uval - lval + 1)) == -1)
+        exit(1);
+
     return 0;
 }
 
-// NOTE : use 'man 3 getopt' to learn about getopt(), opterr, optarg and optopt
-void parseargs(char *argv[], int argc, int *lval, int *uval)
+void parseargs(char *argv[], int argc, int *lval, int *uval, int *nval, int *pval)
 {
     int ch;
 
     opterr = 0;
-    while ((ch = getopt(argc, argv, "l:u:")) != -1)
+    while ((ch = getopt(argc, argv, "l:u:n:p:")) != -1)
         switch (ch)
         {
         case 'l': // Lower bound flag
@@ -73,8 +106,14 @@ void parseargs(char *argv[], int argc, int *lval, int *uval)
         case 'u': // Upper bound flag
             *uval = atoi(optarg);
             break;
+        case 'n':
+            *nval = atoi(optarg);
+            break;
+        case 'p':
+            *pval = atoi(optarg);
+            break;
         case '?':
-            if ((optopt == 'l') || (optopt == 'u'))
+            if ((optopt == 'l') || (optopt == 'u') || (optopt == 'n') || (optopt == 'p'))
                 fprintf(stderr, "Option -%c requires an argument.\n", optopt);
             else if (isprint(optopt))
                 fprintf(stderr, "Unknown option `-%c'.\n", optopt);
