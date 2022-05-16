@@ -4,7 +4,7 @@
 #include <math.h>
 #include <unistd.h>
 
-void parseargs(char *argv[], int argc, int *lval, int *uval);
+void parseargs(char *argv[], int argc, int *lval, int *uval, int *nval, int *tval);
 int isprime(int n);
 char *flagarr = NULL;
 int lval = 1;
@@ -13,12 +13,12 @@ int num;
 
 int main(int argc, char **argv)
 {
-    int lval = 1;
-    int uval = 100;
-    int count = 0;
+    int nval = 10;
+    int tval = 4;
+    int countPrime = 0;
 
     // Parse arguments
-    parseargs(argv, argc, &lval, &uval);
+    parseargs(argv, argc, &lval, &uval, &nval, &tval);
     if (uval < lval)
     {
         fprintf(stderr, "Upper bound should not be smaller then lower bound\n");
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
         if (isprime(num))
         {
             flagarr[num - lval] = 1;
-            count++;
+            countPrime++;
         }
         else
         {
@@ -50,23 +50,31 @@ int main(int argc, char **argv)
     }
 
     // Print results
-    printf("Found %d primes%c\n", count, count ? ':' : '.');
-    for (num = lval; num <= uval; num++)
-        if (flagarr[num - lval])
+    printf("Found %d primes%c\n", countPrime, countPrime ? ':' : '.');
+    printf("printing %d : \n", nval);
+    int temp = nval;
+    int index = 1;
+    for (int i = lval; i <= uval; i++)
+        if (flagarr[i - lval])
         {
-            count--;
-            printf("%d%c", num, count ? ',' : '\n');
+            temp--;
+            if (temp >= 0)
+            {
+                printf("%d%c) %d\n", index, index >= 10 ? '\0' : ' ', i);
+                index++;
+            }
         }
+
     return 0;
 }
 
 // NOTE : use 'man 3 getopt' to learn about getopt(), opterr, optarg and optopt
-void parseargs(char *argv[], int argc, int *lval, int *uval)
+void parseargs(char *argv[], int argc, int *lval, int *uval, int *nval, int *tval)
 {
     int ch;
 
     opterr = 0;
-    while ((ch = getopt(argc, argv, "l:u:")) != -1)
+    while ((ch = getopt(argc, argv, "l:u:n:t:")) != -1)
         switch (ch)
         {
         case 'l': // Lower bound flag
@@ -75,8 +83,13 @@ void parseargs(char *argv[], int argc, int *lval, int *uval)
         case 'u': // Upper bound flag
             *uval = atoi(optarg);
             break;
+        case 'n': // Upper bound flag
+            *nval = atoi(optarg);
+            break;
+        case 't':
+            *tval = atoi(optarg);
         case '?':
-            if ((optopt == 'l') || (optopt == 'u'))
+            if (((optopt == 'l') || (optopt == 'u')) || (optopt == 'n'))
                 fprintf(stderr, "Option -%c requires an argument.\n", optopt);
             else if (isprint(optopt))
                 fprintf(stderr, "Unknown option `-%c'.\n", optopt);
