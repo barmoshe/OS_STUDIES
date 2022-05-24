@@ -35,6 +35,7 @@ void *func(void *arguments)
             args->flagarr[mynum - args->lval] = 1;
         }
     }
+    return NULL;
 }
 
 int main(int argc, char **argv)
@@ -105,7 +106,7 @@ int main(int argc, char **argv)
     for (int i = 0; i < tval; i++)
     {
         if (pthread_join(threads[i], NULL) != 0)
-            perror("failed to join thread!\n");
+            perror("Thread error\n");
     }
 
     for (int i = 0; i < uval; i++)
