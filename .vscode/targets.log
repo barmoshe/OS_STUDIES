@@ -7,7 +7,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 
 # This program built for i386-apple-darwin11.3.0
 
-# Make data base, printed on Mon May 16 15:57:14 2022
+# Make data base, printed on Tue May 24 16:13:39 2022
 
 # Variables
 
@@ -38,7 +38,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 __CFBundleIdentifier = com.microsoft.VSCode
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/qz/0_6kh8gd0jq3xldb89cj9hs80000gn/T/vscode-ipc-33157866-ddcf-41d6-bef7-ef27fb35b8cb.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/qz/0_6kh8gd0jq3xldb89cj9hs80000gn/T/vscode-ipc-0ed2e88b-5d8b-4839-a7ac-4cbd0fd802bd.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -50,11 +50,9 @@ ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.EikJh37Ds0/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.tt9GTqanXu/Listeners
 # automatic
 %F = $(notdir $%)
-# environment
-SQLITE_EXEMPT_PATH_FROM_VNODE_GUARDS = /Users/barmoshe/Library/WebKit/Databases
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
@@ -85,8 +83,6 @@ MAKE = $(MAKE_COMMAND)
 MAKECMDGOALS := all
 # environment
 SHLVL = 1
-# environment
-BLOCKSIZE = 512
 # default
 MAKE_VERSION := 3.81
 # environment
@@ -138,9 +134,9 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 39476
+VSCODE_PID = 3234
 # variable set hash-table stats:
-# Load=64/1024=6%, Rehash=0, Collisions=1/85=1%
+# Load=62/1024=6%, Rehash=0, Collisions=1/83=1%
 
 # Pattern-specific Variable Values
 
@@ -148,9 +144,9 @@ VSCODE_PID = 39476
 
 # Directories
 
-# . (device 16777223, inode 59764905): 12 files, no impossibilities.
+# . (device 16777220, inode 59764905): 14 files, no impossibilities.
 
-# 12 files, no impossibilities in 1 directories.
+# 14 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -222,7 +218,7 @@ GNUmakefile:
 # strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
 # strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
 
-# Finished Make data base on Mon May 16 15:57:14 2022
+# Finished Make data base on Tue May 24 16:13:39 2022
 
  
 make: *** No rule to make target `all'.  Stop.
